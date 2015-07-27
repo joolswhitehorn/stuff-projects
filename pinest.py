@@ -77,10 +77,10 @@ while True:
         print read_temp()
         print "Target temp"
         print read_gmail()
-        if (read_gmail() > read_temp()):#Compare varSubject to current temp
+        if (read_gmail() > read_temp()):#If target temp (varSubject) is higher than current temp
             gpio write 0 1 #Turn ON relay on WiringPi pin 0
             print "turn heating on\n"
         else:
             gpio write 0 0 #Turn OFF relay on WiringPi pin 0
             print "turn heating off\n"
-        time.sleep(5)
+        time.sleep(5) #Wait 5 seconds before checking again
