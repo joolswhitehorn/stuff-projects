@@ -41,7 +41,7 @@ def read_temp():
 def read_gmail():
     global varSubject
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
-    mail.login('raspberrypinest@gmail.com','remoteheating')
+    mail.login('YOUREMAILADDRESS@gmail.com','YOUR PASSWORD HERE')
     mail.select('inbox')
     mail.list()
 
