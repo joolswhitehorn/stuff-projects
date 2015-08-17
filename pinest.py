@@ -6,7 +6,12 @@ import time
 import imaplib
 import email
 
-#read temperature from digital thermometer
+# wiringpi numbers  
+import wiringpi2 as wiringpi
+wiringpi.wiringPiSetup()
+wiringpi.pinMode(0, 1) # sets WP pin 0 to output 
+
+#Find temperature from thermometer
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
@@ -36,7 +41,7 @@ def read_temp():
 def read_gmail():
     global varSubject
     mail = imaplib.IMAP4_SSL('imap.gmail.com')
-    mail.login('email@gmail.com','yourPasswordPlease')
+    mail.login('raspberrypinest@gmail.com','remoteheating')
     mail.select('inbox')
     mail.list()
 
@@ -61,7 +66,7 @@ def read_gmail():
         varFrom = msg['from']
         varFrom = varFrom.replace('<','')
         varFrom = varFrom.replace('>','')
-    
+
     #Remove used emails from mailbox
         typ, data = mail.search(None, 'ALL')
     for num in data[0].split():
@@ -77,10 +82,10 @@ while True:
         print read_temp()
         print "Target temp"
         print read_gmail()
-        if (read_gmail() > read_temp()):#If target temp (varSubject) is higher than current temp
-            gpio write 0 1 #Turn ON relay on WiringPi pin 0
-            print "turn heating on\n"
+        if (read_gmail() > read_temp()):#Compare varSubject to temp
+            wiringpi.digitalWrite(0, 1) # sets port 0 to 1 (3.3V, on)
+            print "HEATING ON\n"
         else:
-            gpio write 0 0 #Turn OFF relay on WiringPi pin 0
-            print "turn heating off\n"
-        time.sleep(5) #Wait 5 seconds before checking again
+            wiringpi.digitalWrite(0, 0) # sets port 0 to 0 (3.3V, off)
+            print "HEATING OFF\n"
+        time.sleep(5)
